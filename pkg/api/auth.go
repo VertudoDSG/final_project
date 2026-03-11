@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
@@ -92,7 +91,6 @@ func signInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	envPwd := os.Getenv("TODO_PASSWORD")
 	if strings.TrimSpace(envPwd) == "" {
 		writeJSONError(w, "Authentication disabled")
 		return
@@ -132,7 +130,6 @@ func signInHandler(w http.ResponseWriter, r *http.Request) {
 // authMiddleware защищает API, если задан TODO_PASSWORD.
 func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		envPwd := os.Getenv("TODO_PASSWORD")
 		if strings.TrimSpace(envPwd) == "" {
 			next(w, r)
 			return
@@ -152,4 +149,3 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		next(w, r)
 	}
 }
-

@@ -14,10 +14,13 @@ type Task struct {
 	Repeat  string `json:"repeat"`
 }
 
+// defaultTasksLimit определяет максимальное количество задач, возвращаемое по умолчанию.
+const defaultTasksLimit = 50
+
 // Tasks возвращает список задач, отсортированный по дате.
 func Tasks(limit int) ([]*Task, error) {
 	if limit <= 0 {
-		limit = 50
+		limit = defaultTasksLimit
 	}
 
 	rows, err := DB.Query(
@@ -121,5 +124,3 @@ func UpdateDate(next string, id string) error {
 	_, err := DB.Exec(`UPDATE scheduler SET date=? WHERE id=?`, next, id)
 	return err
 }
-
-

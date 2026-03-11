@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const maxDateIterations = 5000
+
 // NextDate рассчитывает следующую дату выполнения задачи.
 // Формат дат: 20060102. Возвращаемая дата всегда строго больше now.
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
@@ -34,7 +36,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			return "", fmt.Errorf("invalid yearly repeat format")
 		}
 		current := start
-		for i := 0; i < 5000; i++ {
+		for i := 0; i < maxDateIterations; i++ {
 			// всегда делаем хотя бы один шаг по правилу
 			current = current.AddDate(1, 0, 0)
 
@@ -59,7 +61,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			return "", fmt.Errorf("invalid daily repeat number")
 		}
 		current := start
-		for i := 0; i < 5000; i++ {
+		for i := 0; i < maxDateIterations; i++ {
 			// всегда делаем хотя бы один шаг по правилу
 			current = current.AddDate(0, 0, n)
 			if current.After(now) {
@@ -91,7 +93,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 		current := startScan
 
-		for i := 0; i < 5000; i++ {
+		for i := 0; i < maxDateIterations; i++ {
 			wd := int(current.Weekday())
 			if wd == 0 {
 				wd = 7
@@ -145,7 +147,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 		current := startScan
 
-		for i := 0; i < 5000; i++ {
+		for i := 0; i < maxDateIterations; i++ {
 			month := int(current.Month())
 			if len(allowedMonths) > 0 {
 				if _, ok := allowedMonths[month]; !ok {
@@ -243,5 +245,3 @@ func nextDateHandler(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte(next))
 	}
 }
-
-
